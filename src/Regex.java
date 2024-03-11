@@ -31,64 +31,65 @@ public class Regex {
   static int inc = 0;
 
   public static void main(String[] args) throws IOException {
-    String currentDirectory = System.getProperty("user.dir");
+    if (args.length == 0) {
+      System.out.println("No arguments provided.");
+    } else {
 
-    // Print the current working directory
-    System.out.println("Current Directory: " + currentDirectory);
-    boolean optionTop = true;
-    int pos = 0;
-    if(args[pos].equals("grep")) {
-      ++pos;
-      System.out.println("Mode OPTIONS");
-      System.out.println("Expression regulieres: "+args[pos]);
-      //Pattern RegexCompile = Pattern.compile(args[pos]);
-      if(args[pos].equals("-h") || args[pos].equals("--hepl")){
-        System.out.println("""
-                Usage: grep [OPTION]... PATTERN [FILE]...
-                Search for PATTERN in each FILE or standard input.
+      String currentDirectory = System.getProperty("user.dir");
 
-                Options:
-                  -V, --version             Print the version information
-                  -e, --regexp=PATTERN      use PATTERN for matching
-                  -f, --file=FILE           obtain PATTERN from FILE
-                  -i,-y --ignore-case       ignore case distinctions
-                  -c, --count               print only a count of matching lines
-                  -ci                       Case-insensitive count the number of lines containing the string
-                  -v, --invert-match        Invert the sense of matching, to select non-matching lines
-                  -w, --word-regexp         Select only lines containing matches that form whole words
-                  -x, --line-regexp         Select only matches that exactly match the whole line
-                  -n, --line-number         print line numbers with output lines
-                  -l, --files-with-matches  Display filenames that contain the string
-                  -r, --recursive           read all files under each directory recursively
-                  -h, --help                display this help and exit
-                """);
-      }
-      else if (args[pos].equals("-V") || args[pos].equals("--version")) {
-        System.out.println("""
-                MyCustomGrep 1.0 (Windows Build)
-                Copyright (C) 2024 Y.Kacimi
-                This is a custom build of grep for Windows.
-                """);
-      }
-      // && args[pos].startsWith("-")
-      else if (args[pos].equals("-e") || args[pos].equals("--regexp=")){
-        ++pos;
-        String combinedPattern=args[pos];
-        int i=0;
-        ++pos;
-        while (args[pos].equals("-e") ){
-          ++pos;
-          combinedPattern += "|" + args[pos];
-          i++;
-          System.out.println("option mode N`"+i+": -e " + args[pos]);
-          ++pos;
+      // Print the current working directory
+      System.out.println("Current Directory: " + currentDirectory);
+      boolean optionTop = true;
+      int pos = 0;
+
+        System.out.println("Mode OPTIONS");
+        System.out.println("Expression regulieres: " + args[pos]);
+        //Pattern RegexCompile = Pattern.compile(args[pos]);
+        if (args[pos].equals("-h") || args[pos].equals("--hepl")) {
+          System.out.println("""
+                  Usage: grep [OPTION]... PATTERN [FILE]...
+                  Search for PATTERN in each FILE or standard input.
+
+                  Options:
+                    -V, --version             Print the version information
+                    -e, --regexp=PATTERN      use PATTERN for matching
+                    -f, --file=FILE           obtain PATTERN from FILE
+                    -i,-y --ignore-case       ignore case distinctions
+                    -c, --count               print only a count of matching lines
+                    -ci                       Case-insensitive count the number of lines containing the string
+                    -v, --invert-match        Invert the sense of matching, to select non-matching lines
+                    -w, --word-regexp         Select only lines containing matches that form whole words
+                    -x, --line-regexp         Select only matches that exactly match the whole line
+                    -n, --line-number         print line numbers with output lines
+                    -l, --files-with-matches  Display filenames that contain the string
+                    -r, --recursive           read all files under each directory recursively
+                    -h, --help
+                  """);
+        } else if (args[pos].equals("-V") || args[pos].equals("--version")) {
+          System.out.println("""
+                  MyCustomGrep 1.0 (Windows Build)
+                  Copyright (C) 2024 Y.Kacimi
+                  This is a custom build of grep for Windows.
+                  """);
         }
-        matchTraiter(pos,combinedPattern,args, ' ');
-      }
-      else if (args[pos].equals("-f") || args[pos].equals("--file=")){
-        ++pos;
-        int i=0;
-        List<String> ligners;
+        // && args[pos].startsWith("-")
+        else if (args[pos].equals("-e") || args[pos].equals("--regexp=")) {
+          ++pos;
+          String combinedPattern = args[pos];
+          int i = 0;
+          ++pos;
+          while (args[pos].equals("-e")) {
+            ++pos;
+            combinedPattern += "|" + args[pos];
+            i++;
+            System.out.println("option mode N`" + i + ": -e " + args[pos]);
+            ++pos;
+          }
+          matchTraiter(pos, combinedPattern, args, ' ');
+        } else if (args[pos].equals("-f") || args[pos].equals("--file=")) {
+          ++pos;
+          int i = 0;
+          List<String> ligners;
 //      while (!args[pos].startsWith("-") || !args[pos].startsWith("--") || args[pos]!=null){
 //        File file = new File(args[pos]);
 //        ligners.addAll(readerLignes(file));
@@ -96,77 +97,67 @@ public class Regex {
 //        System.out.println("file N`"+i+": " + args[pos]);
 //        ++pos;
 //      }
-        File file = new File(args[pos]);
-        ligners=readerLignes(file);
-        ++pos;
-        String combinedPattern= ligners.remove(0);
-        for (String ligne : ligners
-        ) {
-          if(!ligne.isEmpty())
-            combinedPattern += "|" + ligne;
-        }
-        if (args[pos].equals("-e") || args[pos].equals("--regexp=")){
+          File file = new File(args[pos]);
+          ligners = readerLignes(file);
           ++pos;
-          combinedPattern += "|" + args[pos];
-          ++pos;
-          while (args[pos].equals("-e") ){
+          String combinedPattern = ligners.remove(0);
+          for (String ligne : ligners
+          ) {
+            if (!ligne.isEmpty())
+              combinedPattern += "|" + ligne;
+          }
+          if (args[pos].equals("-e") || args[pos].equals("--regexp=")) {
             ++pos;
             combinedPattern += "|" + args[pos];
             ++pos;
+            while (args[pos].equals("-e")) {
+              ++pos;
+              combinedPattern += "|" + args[pos];
+              ++pos;
+            }
           }
-        }
-        matchTraiter(pos,combinedPattern,args, ' ');
-      }
-      else if (args[pos].equals("-i") || args[pos].equals("ignore-case") || args[pos].equals("-y")) {
-        ++pos;
-        args[pos] = args[pos].toLowerCase();
-        matchTraiter(pos,args, 'i');
-      }
-      else if (args[pos].equals("-v") || args[pos].equals("--invert-match")) {
-        ++pos;
-        args[pos] = args[pos].toLowerCase();
-        matchTraiter(pos,args, 'v');
-      }
-      else if (args[pos].equals("-w") || args[pos].equals("--word-regexp=")) {
-        ++pos;
-        args[pos] = args[pos].toLowerCase();
-        matchTraiter(pos,args, 'w');
-      }
-      else if (args[pos].equals("-x") || args[pos].equals("--line-regexp=")) {
-        ++pos;
-        args[pos] = args[pos].toLowerCase();
-        matchTraiter(pos,args, 'x');
-      }
-      else if (args[pos].equals("-c") ) {
-        ++pos;
-        matchTraiter(pos, args, 'c');
-        System.out.println(inc);
-      }
-      else if (args[pos].equals("-ci") ) {
-        ++pos;
-        args[pos] = args[pos].toLowerCase();
-        matchTraiter(pos, args, 'q');
-        System.out.println(inc);
-      }
-      else if (args[pos].equals("-n") ) {
-        ++pos;
-        args[pos] = args[pos].toLowerCase();
-        matchTraiter(pos, args, 'n');
-      }
-      else if (args[pos].equals("-l") || args[pos].equals("--files-with-matches")) {
-        ++pos;
-        args[pos] = args[pos].toLowerCase();
-        matchTraiter(pos, args, 'l');
-      }
-
-      else if (!args[pos].startsWith("-")) {
-        matchTraiter(pos, args, ' ');
-      }
-      else
-        System.err.println("they're no option handle " + args[pos]);
+          matchTraiter(pos, combinedPattern, args, ' ');
+        } else if (args[pos].equals("-i") || args[pos].equals("ignore-case") || args[pos].equals("-y")) {
+          ++pos;
+          args[pos] = args[pos].toLowerCase();
+          matchTraiter(pos, args, 'i');
+        } else if (args[pos].equals("-v") || args[pos].equals("--invert-match")) {
+          ++pos;
+          args[pos] = args[pos].toLowerCase();
+          matchTraiter(pos, args, 'v');
+        } else if (args[pos].equals("-w") || args[pos].equals("--word-regexp=")) {
+          ++pos;
+          args[pos] = args[pos].toLowerCase();
+          matchTraiter(pos, args, 'w');
+        } else if (args[pos].equals("-x") || args[pos].equals("--line-regexp=")) {
+          ++pos;
+          args[pos] = args[pos].toLowerCase();
+          matchTraiter(pos, args, 'x');
+        } else if (args[pos].equals("-c")) {
+          ++pos;
+          matchTraiter(pos, args, 'c');
+          System.out.println(inc);
+        } else if (args[pos].equals("-ci")) {
+          ++pos;
+          args[pos] = args[pos].toLowerCase();
+          matchTraiter(pos, args, 'q');
+          System.out.println(inc);
+        } else if (args[pos].equals("-n")) {
+          ++pos;
+          args[pos] = args[pos].toLowerCase();
+          matchTraiter(pos, args, 'n');
+        } else if (args[pos].equals("-l") || args[pos].equals("--files-with-matches")) {
+          ++pos;
+          args[pos] = args[pos].toLowerCase();
+          matchTraiter(pos, args, 'l');
+        } else if (!args[pos].startsWith("-")) {
+          matchTraiter(pos, args, ' ');
+        } else
+          System.out.println("they're no option handle " + args[pos]);
 
 //    if (args[pos].startsWith("-",1))
 //      matchTraiter(pos,args, ' ');
+
 
     }
   }
@@ -226,11 +217,11 @@ public class Regex {
       br.close();
       return lignes;
     } catch (FileNotFoundException e) {
-      System.err.println("File not found: " + f.getAbsolutePath());
+      System.out.println("File not found: " + f.getAbsolutePath());
       e.printStackTrace();
       return null;
     } catch (IOException ioe) {
-      System.err.println("Error while reading the file: " + f.getAbsolutePath());
+      System.out.println("Error while reading the file: " + f.getAbsolutePath());
       ioe.printStackTrace();
       return null;
     }
@@ -252,7 +243,7 @@ public class Regex {
         matchReader(file, RegexCompile, optionTop);
         //System.out.println("J'ai traite le fichier: " + args[pos]);
       } catch (IOException ioe) {
-        System.err.println("Impossible de traiter le fichier: " + args[pos]);
+        System.out.println("Impossible de traiter le fichier: " + args[pos]);
         ioe.printStackTrace();
       }
     }
