@@ -15,6 +15,6 @@ Your support is greatly appreciated!
 
 ## Feedback and Issues
 
-For feedback, bug reports, or feature requests, please [open an issue](https://github.com/yourusername/MyGrepInstaller/issues) on GitHub.
+For feedback, bug reports, or feature requests, please [open an issue](https://github.com/YASSINEKOO/Grep/tree/master) on GitHub.
 
 Thank you for using MyGrepInstaller!
