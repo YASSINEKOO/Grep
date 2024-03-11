@@ -17,4 +17,4 @@ Your support is greatly appreciated!
 
 For feedback, bug reports, or feature requests, please [open an issue](https://github.com/YASSINEKOO/Grep/tree/master) on GitHub.
 
-Thank you for using MyGrepInstaller!
+Thank you for using MyGrep!
